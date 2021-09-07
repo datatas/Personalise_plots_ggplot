@@ -6,4 +6,5 @@ You will need the following packages installed in your computer to run these two
 - magrittr  
 - patchwork  
 - cowplot  
-- ggrepel  
+- ggrepel    
+- janitor
