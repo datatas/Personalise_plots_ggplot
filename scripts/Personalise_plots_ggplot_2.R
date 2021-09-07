@@ -170,13 +170,14 @@ happy %>%
   #We move it under point so it does not affect any other geometry
   geom_point(aes(size = total_population), 
              alpha = 0.5)+
-  #We will also use a new function to improve the position of labels
+  #We will also use a new function to improve the position of labels and remove it from
+  #the legend
   geom_label_repel(data = top_labels, aes(label = entity), 
-                   label.padding = unit(0.2, "lines"),
-                   alpha = 0.7, min.segment.length = 0, nudge_x = 0.2, nudge_y = 0.2)+
+                   label.padding = unit(0.2, "lines"), show.legend = F,
+                   alpha = 0.7, min.segment.length = 0, nudge_x = 0.1, nudge_y = -0.1)+
   geom_label_repel(data = bottom_labels, aes(label = entity),
-                   label.padding = unit(0.2, "lines"),
-                   alpha = 0.7, min.segment.length = 0, nudge_x = 0.1, nudge_y = 0.1)+
+                   label.padding = unit(0.2, "lines"), show.legend = F,
+                   alpha = 0.7, min.segment.length = 0, nudge_x = -0.1, nudge_y = 0.1)+
   #We will also add a ring around the points that have labels,
   #This way they can be identified easier
   geom_point(data = top_labels, shape = 1, color = "black",
@@ -207,7 +208,12 @@ happy %>%
   #Change the grid lines
   theme(panel.grid = element_line(colour = "#dde0e3", linetype = "dashed"), 
         panel.border = element_blank(),
-        axis.line = element_line(colour = "#dde0e3", linetype = "dashed"))
+        axis.line = element_line(colour = "#dde0e3", linetype = "dashed"),
+        #We will increase the size of the text
+        legend.text = element_text(size = 11),
+        axis.title = element_text(size = 12),
+        axis.text = element_text(size = 11),
+        plot.title = element_text(size = 14, hjust = 0.5))
 
 #If we are happy with the result, we can save
-ggsave("figures/Satisfaction_GDP.png", device = "png", dpi = 300)
+ggsave("figures/Satisfaction_GDP.png", device = "png", dpi = 300, width = 10, height = 8)
