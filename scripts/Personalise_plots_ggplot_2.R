@@ -25,6 +25,12 @@ happiness <- read_csv("data/gdp-vs-happiness.csv")
 #We can now check the structure of our data
 glimpse(happiness)
 
+#Let's create a dataset with information about countries and continents
+continent <- happiness %>% 
+  #We select the columns of interest only
+  select(c(Entity, Continent)) %>% 
+  #Remove any rows with NA values
+  drop_na()
 
 # Data manipulation -------------------------------------------------------
 happy <- happiness %>% 
@@ -34,15 +40,21 @@ happy <- happiness %>%
          "total_population" = `Total population (Gapminder, HYDE & UN)`) %>% 
   #Let's make those names better
   janitor::clean_names() %>%
-  #Remove any rows for which there is no data
-  drop_na() %>% 
+  #Select all columns in happy except continent
+  select(-continent) %>% 
+  #A left join will only keep the information on the left dataframe
+  #which in this case is happy (without the continent column)
+  left_join(continent, by = c('entity'= 'Entity')) %>% 
+  #Let's remove any rows for which there is no information about life satisfaction
+  drop_na(life_satisfaction:total_population) %>% 
+  #Let's make those names better
+  janitor::clean_names() %>%
   #Now let's select the latest year for which there was data for each country
-  group_by(entity, code) %>% 
   top_n(n = 1, wt = year) %>%
   #We will transform all columns to factors except for life satisfaction and GDP
   mutate_at(vars(-(life_satisfaction:total_population)), as.factor) %>% 
   mutate(gdp_log = log10(gdp_per_capita))
-  
+
 #We can check the result
 glimpse(happy)
 
